@@ -1,0 +1,113 @@
+---Human--- 1 20
+lowerleg
+torso
+upperleg
+foot
+head
+lowerarm
+upperarm
+hand
+---Cup--- 21 40
+body
+handle
+---Glasses--- 41 60
+lens
+skeleton
+middle
+---Airplane--- 61 80
+body
+wing
+stabilizer
+rudder
+engine
+---Ant--- 81 100
+torso
+head
+antenna
+back
+leg
+---Chair--- 101 120
+support
+leg
+arm
+backsupport
+---Octopus--- 121 140
+body
+leg
+---Table--- 141 160
+support
+leg
+---Teddy--- 161 180
+torso
+hand
+leg
+head
+ear
+---Hand--- 181 200
+hand
+thumb
+finger1
+finger2
+finger3
+finger4
+---Plier--- 201 220
+center
+handle
+edge
+---Fish--- 221 240
+body
+fin
+tail
+---Bird--- 241 260
+body
+head
+wing
+tail
+leg
+---Armadillo--- 281 300
+torso
+foot
+lowerLeg
+upperLeg
+tail
+hand
+lowerArm
+upperArm
+ear
+head
+back
+---Bust--- 301 320
+hair
+background
+nose
+neck
+ear
+eye
+face
+mouth
+---Mesh--- 321 340
+bigbox
+smallbox
+smallcylinder
+mediumcylinder
+bigcylinder
+---Bearing--- 341 360
+bigroller
+smallroller
+tinyroller
+mediumroller
+base1
+base2
+---Vase--- 361 380
+body
+spout
+handle
+top
+base
+---FouLeg--- 381 400
+torso
+head
+earhorn
+leg
+neck
+tail
