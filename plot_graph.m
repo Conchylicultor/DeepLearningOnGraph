@@ -2,7 +2,7 @@ clearvars;
 
 % Initialisation
 idMesh = '213';
-folderName = 'Meshs/';
+folderName = '../Data/Meshs/';
 
 addpath(genpath('../Tools/gspbox/'));
 gsp_start

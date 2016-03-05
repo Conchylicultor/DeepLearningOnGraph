@@ -12,7 +12,7 @@ import scipy.io as sio
 
 # Set directories
 root = os.getcwd()
-dirData = root + '/Meshs/'
+dirData = root + '/../Data/Meshs/'
 
 
 def main():
