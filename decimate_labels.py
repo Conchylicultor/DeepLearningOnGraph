@@ -17,8 +17,6 @@ import utils
 root = os.getcwd()
 dirMesh            = root + '/../MeshsegBenchmark-1.0/data/off/'
 dirMeshDecimated   = root + '/../MeshsegBenchmark-1.0/data/off_decimated/' # Should contain the sames number and filename as above
-#dirLabels          = root + '/../MeshsegBenchmark-1.0/data/labels/'
-#dirLabelsDecimated = root + '/../MeshsegBenchmark-1.0/data/labels_decimated/'
 dirLabels          = root + '/../MeshsegBenchmark-1.0/data/seg/Bench/'
 dirLabelsDecimated = root + '/../MeshsegBenchmark-1.0/data/seg/Bench_decimated/'
 
@@ -32,7 +30,7 @@ def main():
     assert(os.path.exists(dirLabelsDecimated))
     
     # For each mesh
-    filesList = os.listdir(dirMesh)
+    filesList = utils.sortFiles(os.listdir(dirMesh))
     for filename in filesList:
         if filename.endswith('.off'): # Candidate
             print('Try matching ', filename)
@@ -62,7 +60,7 @@ def main():
                 
                 labelListDecimated.append(labelList[minIndex])
                 if len(labelListDecimated) % 100 == 0:
-                    print(len(labelListDecimated))
+                    print(len(labelListDecimated) / len(pointCloudDecimated) * 100, '%')
                 
             # Save the values of the labels of the closest match indexes
             saveName = dirLabelsDecimated + idMesh + '.seg'

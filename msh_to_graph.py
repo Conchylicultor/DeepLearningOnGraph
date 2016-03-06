@@ -30,11 +30,8 @@ def main():
         raise IOError('Cannot find dirOut: ', dirOut)
         
     # For each mesh
-    meshFilesList = os.listdir(dirMeshData)
-    meshFilesList.sort() # Alphabetical order
-    startIndex = meshFilesList.index(startFromMesh)
-    assert(startIndex != -1, 'Warning: first element not found!!')
-    for meshFilename in meshFilesList[startIndex:]:
+    meshFilesList = utils.sortFiles(os.listdir(dirMeshData), startFromMesh)
+    for meshFilename in meshFilesList:
         # Generate the graph data
         idMesh = meshFilename.split('.')[0]
         print('Extract mesh ', idMesh)

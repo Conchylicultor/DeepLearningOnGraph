@@ -65,21 +65,30 @@ def meshToPointCloud(meshVertices, meshFaces):
     Xin = np.zeros((len(meshFaces), 3))
     
     for i, face in enumerate(meshFaces):
-        # Compute the circumcenter of the triangle
+        # Compute the centroid of the triangle
         
         A = np.array(meshVertices[face[0]])
         B = np.array(meshVertices[face[1]])
         C = np.array(meshVertices[face[2]]) # Triangle coordinates
         
-        AC = C - A
-        AB = B - A
-        ABxAC = np.cross(AB, AC)
-        
-        n = np.cross(ABxAC, AB) * np.linalg.norm(AC)**2  +  np.cross(AC, ABxAC) * np.linalg.norm(AB)**2
-        d = 2.0 * np.linalg.norm(ABxAC)**2
-        
-        center = A + n/d
-        
+        center = (A + B + C)/3
         Xin[i,:] = center
     
     return Xin
+
+def sortFiles(filesList, startFrom=None):
+    """
+    Generate an ordered list of files to compute
+
+    Args:
+        filesList: The file list to sort (will be modified)
+        startFrom: To start from a particular file (avoid recomputing the beginning each times)
+    Returns:
+        The sorted list
+    """
+    
+    filesList.sort() # Alphabetical order
+    startIndex = 0
+    if startFrom != None:
+        startIndex = filesList.index(startFrom) # Raise an exception if not found
+    return filesList[startIndex:]
