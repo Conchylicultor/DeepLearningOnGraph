@@ -17,17 +17,16 @@ import utils
 root = os.getcwd()
 dirMeshData = root + '/../MeshsegBenchmark-1.0/data/off_decimated/'
 dirOut = root + '/../Data/Meshes_decimated/'
-dirOutPlot = root + '/../Data/Plot/'
+dirOutPlot = root + '/../Data/Plot_decimated/'
 
-startFromMesh = '325.off' # Avoid recomputing from scratch (1.off to restart from begining)
+startFromMesh = '1.off' # Avoid recomputing from scratch (1.off to restart from begining)
 
 def main():
 
     # Global check
-    if not os.path.exists(dirMeshData):
-        raise IOError('Cannot find dirMeshData: ', dirMeshData)
-    if not os.path.exists(dirOut):
-        raise IOError('Cannot find dirOut: ', dirOut)
+    assert(os.path.exists(dirMeshData))
+    assert(os.path.exists(dirOut))
+    assert(os.path.exists(dirOutPlot))
         
     # For each mesh
     meshFilesList = utils.sortFiles(os.listdir(dirMeshData), startFromMesh)
@@ -41,7 +40,7 @@ def main():
         pointCloud = utils.meshToPointCloud(meshVertices, meshFaces)
         print('Create graph...')
         #graph = pygsp.graphs.NNGraph(pointCloud, NNtype='radius', center=True, rescale=True, epsilon=0.2)
-        graph = pygsp.graphs.NNGraph(pointCloud)# > Use KNN, much faster
+        graph = pygsp.graphs.NNGraph(pointCloud, center=True, rescale=True)# > Use KNN, much faster
         print('Generate laplacian...')
         graph.create_laplacian('normalized')
         
