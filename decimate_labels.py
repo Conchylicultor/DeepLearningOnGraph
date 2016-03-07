@@ -44,7 +44,7 @@ def main():
             pointCloudDecimated = utils.meshToPointCloud(verticesDecimated, facesDecimated)
             
             # Extract the label list
-            labelList = loadLabelList(dirLabels + idMesh + '.seg')
+            labelList = utils.loadLabelList(dirLabels + idMesh + '.seg')
             labelListDecimated = []
             
             # Use K-NN on each face of the decimated mesh
@@ -65,46 +65,7 @@ def main():
             # Save the values of the labels of the closest match indexes
             saveName = dirLabelsDecimated + idMesh + '.seg'
             print('Saving ', saveName)
-            saveLabelList(labelListDecimated, saveName)
-        
-
-def loadLabelList(filename):
-    """
-    Load the labels informations from the segmentation file
-
-    Args:
-        filename: path of the label file
-    Returns:
-        Array of the label of each node
-    """
-    assert(filename.endswith('.seg'), 'Wrong file format')
-    
-    labelList = []
-    
-    labelsFile = open(filename, 'r')
-    lines = labelsFile.readlines()
-    labelsFile.close()
-    
-    # Extract rows
-    for line in lines:
-        labelList.append(int(line))
-    
-    return labelList
-    
-def saveLabelList(labelList, filename):
-    """
-    Save the labels informations on a seg file
-
-    Args:
-        labelsFilename: Array of the label of each node
-        filename: path of the label file
-    """
-    assert(filename.endswith('.seg'), 'Wrong file format')
-    
-    segFile = open(filename, "w")
-    for label in labelList:
-        segFile.write('%d\n' % label)
-    segFile.close()
+            utils.saveLabelList(labelListDecimated, saveName)
     
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 """
+DEPRECATED: Use seg_to_signal instead !!
+
 Generate training signals and the segmentation files (used for 
 visualisation) from the labels
 

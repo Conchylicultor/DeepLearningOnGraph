@@ -92,3 +92,41 @@ def sortFiles(filesList, startFrom=None):
     if startFrom != None:
         startIndex = filesList.index(startFrom) # Raise an exception if not found
     return filesList[startIndex:]
+
+def loadLabelList(filename):
+    """
+    Load the labels informations from the segmentation file
+
+    Args:
+        filename: path of the label file
+    Returns:
+        Array of the label of each node
+    """
+    assert filename.endswith('.seg'), 'Wrong file format'
+    
+    labelList = []
+    
+    labelsFile = open(filename, 'r')
+    lines = labelsFile.readlines()
+    labelsFile.close()
+    
+    # Extract rows
+    for line in lines:
+        labelList.append(int(line))
+    
+    return labelList
+    
+def saveLabelList(labelList, filename):
+    """
+    Save the labels informations on a seg file (or signal file)
+
+    Args:
+        labelsFilename: Array of the label of each node
+        filename: path of the label file
+    """
+    assert filename.endswith('.seg') or filename.endswith('.txt'), 'Wrong file format'
+    
+    segFile = open(filename, "w")
+    for label in labelList:
+        segFile.write('%d\n' % label)
+    segFile.close()
