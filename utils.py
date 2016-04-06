@@ -114,7 +114,7 @@ def loadLabelList(filename):
     for line in lines:
         labelList.append(int(line))
     
-    return labelList
+    return np.asarray(labelList)
     
 def saveLabelList(labelList, filename):
     """

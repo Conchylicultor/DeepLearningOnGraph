@@ -27,7 +27,7 @@ def main():
     labelsFilesList = utils.sortFiles(os.listdir(dirInSegmentation))
     for labelsFilename in labelsFilesList:
         print('Generate signal for ', labelsFilename)
-        idMesh = labelsFilename.split('_')[0] # Little hack to get the id
+        idMesh = labelsFilename.split('.')[0] # Little hack to get the id
         
         # Eventually create the subfolder where to put the signal
         dirOutCurrentSignal = dirOutSignal + idMesh + '/'
