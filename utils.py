@@ -102,7 +102,7 @@ def loadLabelList(filename):
     Returns:
         Array of the label of each node
     """
-    assert filename.endswith('.seg'), 'Wrong file format'
+    assert filename.endswith('.seg') or filename.endswith('.txt'), 'Wrong file format'
     
     labelList = []
     
