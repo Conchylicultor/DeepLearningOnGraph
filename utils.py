@@ -5,6 +5,7 @@ Use python 3 (but should be working with python 2)
 """
 
 import os, sys
+import re
 import numpy as np
 
 def extractMesh(meshFilename):
@@ -87,11 +88,25 @@ def sortFiles(filesList, startFrom=None):
         The sorted list
     """
     
-    filesList.sort() # Alphabetical order
+    filesList = naturalSort(filesList) # Alphabetical order
     startIndex = 0
     if startFrom != None:
         startIndex = filesList.index(startFrom) # Raise an exception if not found
     return filesList[startIndex:]
+
+def naturalSort(l): 
+    """
+    Return the list sorted correctly (take into account the numerical values
+    instead of just the alphabetical order)
+
+    Args:
+        l: The file list to sort (will be modified)
+    Returns:
+        The sorted list
+    """
+    convert = lambda text: int(text) if text.isdigit() else text.lower() 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)
 
 def loadLabelList(filename):
     """

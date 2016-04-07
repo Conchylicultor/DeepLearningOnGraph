@@ -13,35 +13,31 @@ import utils
 
 # Set directories
 root = os.getcwd()
-#dirData = root + '/../Data/Meshs/'
-dirData = root + '/../Data/Test_mesh_01/'
+#dirDataIn = root + '/../Data/Meshs/'
+dirDataIn = root + '/../Data/Test_mesh_01/samples/'
+dirDataOut = root + '/../Data/Test_mesh_01/samples_mat/'
+savedVariableName = 'y'
 
 
 def main():
 
     # Global check
-    if not os.path.exists(dirData):
-        raise IOError('Cannot find dirData: ', dirData)
+    assert(os.path.exists(dirDataIn))
+    assert(os.path.exists(dirDataOut))
     
     # For each file
-    filesList = os.listdir(dirData)
+    filesList = os.listdir(dirDataIn)
     for filename in filesList:
+        print('Try converting ', filename)
+        name = filename.split('.')[0] # Little hack to get the filename
         if filename.endswith('.npy'): # Candidate
-            npyToMat(filename)
-        if filename.endswith('.txt'): # Candidate
-            txtToMat(filename)
-
-def npyToMat(filename):
-    print('Try converting ', filename)
-    name = filename.split('.')[0] # Little hack to get the filename
-    matrix = np.load(dirData + filename, fix_imports = True)
-    sio.savemat(dirData + name + '.mat', {'V':matrix})
-
-def txtToMat(filename):
-    print('Try converting ', filename)
-    name = filename.split('.')[0] # Little hack to get the filename
-    matrix = utils.loadLabelList(dirData + filename)
-    sio.savemat(dirData + name + '.mat', {'y':matrix})
+            matrix = np.load(dirDataIn + filename, fix_imports = True)
+        elif filename.endswith('.txt'): # Candidate
+            matrix = utils.loadLabelList(dirDataIn + filename)
+        else:
+            print('Wrong format, skiped')
+            continue
+        sio.savemat(dirDataOut + name + '.mat', {savedVariableName:matrix})
 
 if __name__ == "__main__":
     main()
