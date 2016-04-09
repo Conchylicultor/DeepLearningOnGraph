@@ -1,27 +1,17 @@
 --[[
-Convert mat files to .th (for spectral-lib)
+Convert mat training and testing files and merge them into a unique .th file (for spectral-lib)
 --]]
 
 matio = require 'matio' -- For loading .mat files
-directoryIn = '../Data/Test_mesh_01/samples_mat/'
+
+-- Parametters
+
+directoryIn = '../Data/Test_mesh_01/samples/'
 directoryOut = '../Data/Test_mesh_01/'
 
--- -- Convert the laplacian
--- -- filename = directory..'1_laplacian'
--- filename = directory..'laplacian' -- Dense matrix
--- x = matio.load(filename..'.mat')
--- torch.save(filename..'.th',{V=x.V})
--- 
--- print('Laplacian ending...')
--- do return end
-
--- Convert the signals
-
 numFeature = 1000
-numSample = 4000
-numClass = 8
 
-
+-- Utils functions
 
 function alphanumSort(o)
   local function padnum(d) return ("%03d%s"):format(#d, d) end
@@ -30,41 +20,88 @@ function alphanumSort(o)
   return o
 end
 
-local p = io.popen('find "'..directoryIn..'" -type f | sort') --Open directory look for files, save data in p. By giving '-type f' as parameter, it returns all files
-local i = 1
-
-tensTr = torch.Tensor(numSample, 1, numFeature) -- [nSamples x nChannels x nFeatures]
-tensTrLabels = torch.Tensor(numSample)
-
--- Copy the list of file
-filelines = {}
-i=1
-for file in p:lines() do
-    filelines[i] = file:sub(0, file:len() - 4)
-    i=i+1
+function stringEndsWith(String, End)
+   return End=='' or string.sub(String,-string.len(End))==End
 end
-print('Sample extracted: '..table.getn(filelines))
-filelines = alphanumSort(filelines)
 
-for i, filename in pairs(filelines) do --Loop through all files
-    -- Load the file to convert
-    print('Loading '..i..': '..filename)
-    x = matio.load(filename..'.mat')
-    label = math.floor((i-1)*numClass/numSample) -- WORKS ONLY IF SAME NUMBER OF SAMPLE AND FILES ORDERED
-    print('Label: '..label)
+function loadListFiles(directoryName)
+    -- Load, filter, sort and return the list of the files in the given directory
     
-    -- Conversion
-    tensTr[i][1] = x.y
-    tensTrLabels[i] = label
+    --Open directory look for files, save data in p. By giving '-type f' as parameter, it returns all files
+    local p = io.popen('find "'..directoryName..'" -type f | sort') 
     
-    -- Debug message (to check correctness)
-    print('Debug for '..i..':')
-    for j=1,10 do
-        print(tensTr[i][1][j])
+    filelines = {}
+    i=1
+    for file in p:lines() do
+        if stringEndsWith(file, '.mat') then -- Filter rights files
+            filelines[i] = file:sub(0, file:len() - 4)
+            i=i+1
+        end
+    end
+    filelines = alphanumSort(filelines)
+    return filelines
+end
+
+
+-- Main Script
+
+function getSamplesTensor(mode)
+    if mode == 'Training' then
+        listFiles = loadListFiles(directoryIn..'tr/')
+        nameMode = 'tr'
+    elseif mode == 'Testing' then
+        listFiles = loadListFiles(directoryIn..'te/')
+        nameMode = 'te'
     end
     
-    i = i+1
+    numSample = table.getn(listFiles)
+    
+    tensorSamples = torch.Tensor(numSample, 1, numFeature) -- [nSamples x nChannels x nFeatures]
+    tensorLabels  = torch.Tensor(numSample)
+    
+    print(numSample..'  samples for '..mode)
+    
+    -- Load the samples
+    for i, filename in pairs(listFiles) do --Loop through all files
+        -- Load the file to convert
+        print('Loading '..i..': '..filename)
+        x = matio.load(filename..'.mat')
+        
+        -- Conversion and adding it to the tensor
+        tensorSamples[i][1] = x.y
+        
+        -- Debug message (to check correctness)
+        print('Debug for '..i..':')
+        for j=1,10 do
+            print(tensorSamples[i][1][j])
+        end
+    end
+    
+    -- Load the labels
+    x = matio.load(directoryIn..nameMode..'labels.mat')
+    for i = 1, numSample do
+        tensorLabels[i] = x.labels[1][i]
+    end
+    
+    print(tensorLabels:size())
+    
+    print('Debug labels:')
+    for i=1,600 do
+        print(tensorLabels[i])
+    end
+    
+    -- Return all
+    return tensorSamples, tensorLabels
 end
 
+print('----------------------------------------------------')
+print('------------------TRAINING------------------------')
+print('----------------------------------------------------')
+tensTrSamp, tensTrLab = getSamplesTensor('Training')
+print('----------------------------------------------------')
+print('------------------TESTING-------------------------')
+print('----------------------------------------------------')
+tensTeSamp, tensTeLab = getSamplesTensor('Testing')
+
 print('Try saving the dataset...')
-torch.save(directoryOut..'meshData.th',{trdata=tensTr , trlabels=tensTrLabels , tedata=tensTr , telabels=tensTrLabels })
+torch.save(directoryOut..'meshData.th',{trdata=tensTrSamp , trlabels=tensTrLab , tedata=tensTeSamp , telabels=tensTeLab })
