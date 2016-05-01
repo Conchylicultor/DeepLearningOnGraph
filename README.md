@@ -7,4 +7,4 @@ http://segeval.cs.princeton.edu/
 The labels are extracted from:
 http://people.cs.umass.edu/~kalo/papers/LabelMeshes/
 
-The visualization of the mesh is done with the tools provided with the Princeton Dataset.
+The visualization of the mesh is done with the tools provided with the Princeton Dataset. The training is done with the help of spectral-lib (https://github.com/mbhenaff/spectral-lib).
