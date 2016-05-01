@@ -28,6 +28,8 @@ dirOutSamples = root + '/../Data/Test_mesh_01/samples/'
 dirOutSamplesTr = dirOutSamples + 'tr/'
 dirOutSamplesTe = dirOutSamples + 'te/'
 
+ratioSubsampling = 80 # 0 > no subsampling, 100 > full subsampling
+
 
 def main():
     
@@ -58,7 +60,7 @@ def main():
             decimatedSignal = np.copy(completeSignal)
             for j in range(len(completeSignal)): # Iterate over
                 if completeSignal[j] == 1: # Candidate for subsampling
-                    if random.randrange(2) == 0: # 50% chance of removal
+                    if random.randrange(100) < ratioSubsampling: # x% chance of removal
                         decimatedSignal[j] = 0 # Subsample
             utils.saveLabelList(decimatedSignal, dirOutSamplesTr + idSignal + '_' + str(i) + '.txt') # Save (Warning: the natural order must correspond to the label list order)
             sio.savemat(dirOutSamplesTr + idSignal + '_' + str(i) + '.mat', {'y':decimatedSignal})
